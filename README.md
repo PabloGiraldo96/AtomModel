@@ -7,13 +7,13 @@
 
 *Ernest Rutherford's atomic model, proposed in the early 20th century, is famous for introducing the concept of the atomic nucleus. Rutherford's model suggested that atoms consist of a small, dense, positively charged nucleus at the center, with electrons orbiting around the nucleus at a distance.*
 
-This model contains a nucleus and the orbits of an atom, I would like to make the electrons flying around the nucleus but I think it will come later.
+This model contains a nucleus and the orbits of an atom, I would like to make the electrons fly around the nucleus, but I think that will come later.
 
-Also I have leveled up putting the 3d Model into a eucledian space, showing it on it X, Y and Z axes. 
+I have also leveled the 3d model by putting it into a euclidean space, showing it on the X, Y and Z axes.
 
-I hope you enjoy! This was a little project that I had in mind some while ago, so. 
+I hope you enjoy it! This was a little project I had in mind some time ago, so.
 
-Thank you! 
+Thank you very much!
 
 *“The principal aim of mathematical education is to develop certain faculties of the mind.”*
 *Henri Poincaré*
