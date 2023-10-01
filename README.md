@@ -9,7 +9,7 @@
 
 This model contains a nucleus and the orbits of an atom, I would like to make the electrons fly around the nucleus, but I think that will come later.
 
-I have also leveled the 3d model by putting it into a euclidean space, showing it on the X, Y and Z axes.
+I have also leveled up the 3d model by putting it into a euclidean space, showing it on the X, Y and Z axes.
 
 I hope you enjoy it! This was a little project I had in mind some time ago, so.
 
