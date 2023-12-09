@@ -15,7 +15,7 @@
 			}
 		}
 	</script>
-	<title>3D Examples</title>
+	<title>3D Atom Example</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body id="body">
@@ -42,8 +42,8 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			4,5,6,    6,7,4
 		];
 
-		const camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		camera.position.set(10, 15, -22)
+		const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		camera.position.set(15, 12, -22)
 
 		const scene = new THREE.Scene();
 
@@ -75,15 +75,41 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 		planeMesh.rotateX(-Math.PI / 2);
 
-		scene.add(planeMesh);
 
+		const grid = new THREE.GridHelper(40, 40);
+		scene.add(grid, planeMesh);
 
-		const grid = new THREE.GridHelper(20, 20);
-		scene.add(grid);
+		const gridGeometry = grid.geometry;
+		const originalPositions = gridGeometry.attributes.position.array.slice();
 
+		// DEFORMAR GRID
 
-		const geometryOne = new THREE.TorusGeometry( 2.9, 0.099, 16, 100 );
-		const materialOne = new THREE.MeshMatcapMaterial();
+		function deformGrid(time) {
+			const factor = 0.3; // Ajusta este factor según tu preferencia de deformación
+			const positions = gridGeometry.attributes.position.array;
+
+			// Modifica las posiciones de los vértices para deformar el GridHelper
+			for (let i = 0; i < positions.length; i += 3) {
+				const x = originalPositions[i];
+				const y = originalPositions[0];
+				const z = originalPositions[i + 3];
+
+				// Aplica una deformación sinusoidal en la dirección y
+				positions[i + 1] = y + Math.sin(x * factor + time / 800) * 4;
+			}
+
+			// Actualiza los datos de la geometría
+			gridGeometry.attributes.position.needsUpdate = true;
+		}
+
+		const geometrySphere = new THREE.SphereGeometry(0.0050, 32, 32);
+		const materialSphere = new THREE.MeshNormalMaterial();
+
+		const sphere = new THREE.Mesh(geometrySphere, materialSphere);
+		//scene.add(sphere);
+
+		const geometryOne = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialOne = new THREE.MeshMatcapMaterial({specular:0xFFFFFF,shininess: 30 });
 
 		const matcapTextureone = new THREE.TextureLoader().load('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzjFpBMnkh1WTUYftvzeJRu9r7P2mB4PmQBA&usqp=CAU');
 		materialOne.matcap = matcapTextureone;
@@ -92,67 +118,92 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		scene.add( torus );
 
 		const geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.6, 32 );
-		const material = new THREE.MeshMatcapMaterial();
+		const material = new THREE.MeshStandardMaterial({
+		roughness: 0,
+		metalness: 0.2,
+		color: 0xFFFA20,
+		specular: 0xFFFFFF,
+		shininess: 30,
+        });
 
 		const matcapTexture = new THREE.TextureLoader().load('https://png.pngtree.com/thumb_back/fh260/background/20201104/pngtree-hologram-color-mix-background-image_457908.jpg');
 		material.matcap = matcapTexture;
 
 		const mesh = new THREE.Mesh( geometry, materialOne );
-		scene.add( mesh );
 
-		const geometryone = new THREE.TorusGeometry( 2.9, 0.099, 16, 100 );
-		const materialone = new THREE.MeshNormalMaterial();
-
+		const geometryone = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialone = new THREE.MeshNormalMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusOne= new THREE.Mesh( geometryone, materialOne);
-		scene.add( torusOne );
 
-		const geometryFour = new THREE.TorusGeometry( 2.9, 0.099, 16, 100 );
-		const materialfour = new THREE.MeshDepthMaterial();
-
+		const geometryFour = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialfour = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusThree= new THREE.Mesh( geometryFour, materialOne);
-		scene.add( torusThree );
 
-		const geometryFive = new THREE.TorusGeometry( 2.9, 0.099, 16, 100 );
-		const materialfive = new THREE.MeshDepthMaterial();
-
+		const geometryFive = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialfive = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusFive= new THREE.Mesh( geometryFive, materialOne);
-		scene.add( torusFive );
 
-		const geometrySix = new THREE.TorusGeometry( 2.9, 0.099, 16, 100 );
-		const materialSix = new THREE.MeshDepthMaterial();
-
+		const geometrySix = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialSix = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusSix= new THREE.Mesh( geometryFive, materialOne);
-		scene.add( torusSix );
+
+		const geometrySeven = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialSeven = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
+		const torusSeven= new THREE.Mesh( geometrySeven, materialOne);
+
+		scene.add( mesh,torusOne,torusThree,torusFive, torusSix, torusSeven );
 
 	// animation
 
-	mesh.position.x = -0;
-	torus.position.x = -0.011;
-	torusOne.position.x = -0.012;
-	torusThree.position.x = -0.015;
-	torusFive.position.x = -0.019;
-	mesh.position.y = 1.4;
-	torus.position.y = 1.011;
-	torusOne.position.y = 1.012;
-	torusThree.position.y = 1.015;
-	torusFive.position.y = 1.019;
-	torusSix.position.y = 1.019;
+	mesh.position.y = 0.5;
+	mesh.position.z = 0;
+
 
 	function animation(time){
-	mesh.rotation.x = time / 250;
-	mesh.rotation.y = time / 300;
-	torus.rotation.x = time / 400;
-	torus.rotation.y = time / 400;
-	torusOne.rotation.x = time / -600;
-	torusOne.rotation.y = time / -550;
-	torusThree.rotation.x = time / 1300;
-	torusThree.rotation.y = time / 550;
-	torusFive.rotation.x = time / -250;
-	torusSix.rotation.x = time / -750;
-	torusSix.rotation.y = time / -350;
-	renderer.render( scene, camera );
-	}
 
+	const radius = 3.4; // Radio de la órbita
+	const radiusTwo = 1.9; 
+	const radiusThree = 3.7;
+	const radiusFour = 3.2;
+
+
+	const speed = 0.0040; 
+	const speedtwo = 0.0070; 
+
+	const angle = time * speed;
+	const angleTwo = time * speedtwo;
+	const angleThree = time * speed;
+	const angleFour = time * speedtwo;
+
+
+	torus.position.y = radiusTwo * Math.sin(angle);
+	torus.position.x = radius * Math.cos(angle);
+	torus.position.z = radius * Math.sin(angle);
+	torusOne.position.y = radius * Math.sin(angleTwo);
+	torusOne.position.x = radiusThree * Math.cos(angleTwo);
+	torusThree.position.y = radiusTwo * Math.sin(-angle);
+	torusThree.position.x = radiusTwo * Math.cos(-angle);
+	torusThree.position.z = radiusTwo * Math.sin(-angle);
+	torusFive.position.y = radiusTwo * Math.sin(angle);
+	torusFive.position.x = radiusTwo * Math.cos(angle);
+	torusSix.position.y = radiusThree * Math.sin(-angleTwo);
+	torusSix.position.x = radiusThree * Math.cos(-angleTwo);
+	torusSix.position.z = radiusThree * Math.sin(-angleTwo);
+	torusSeven.position.x = radiusFour * Math.cos(angleThree);
+	torusSeven.position.y = radiusFour * Math.sin(angleThree);
+	torusSeven.position.z = radiusFour * Math.cos(angleThree);
+	renderer.render( scene, camera );
+
+    const shineIntensity = 0.05 + Math.sin(time / 1000) * 1.5; // Ajusta según sea necesario
+    materialOne.specularIntensity = shineIntensity;
+    material.specularIntensity = shineIntensity;
+    materialone.specularIntensity = shineIntensity;
+    materialfour.specularIntensity = shineIntensity;
+    materialfive.specularIntensity = shineIntensity;
+    materialSix.specularIntensity = shineIntensity;	
+
+	deformGrid(time);
+	}
 
     </script>
 </body>
