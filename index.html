@@ -91,11 +91,11 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			// Modifica las posiciones de los vértices para deformar el GridHelper
 			for (let i = 0; i < positions.length; i += 3) {
 				const x = originalPositions[i];
-				const y = originalPositions[0];
+				const y = originalPositions[ i+ 1];
 				const z = originalPositions[i + 3];
 
 				// Aplica una deformación sinusoidal en la dirección y
-				positions[i + 1] = y + Math.sin(x * factor + time / 800) * 4;
+				positions[i + 1] = y + Math.sin(z * factor + time / 800) * 2;
 			}
 
 			// Actualiza los datos de la geometría
