@@ -42,8 +42,8 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			4,5,6,    6,7,4
 		];
 
-		const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		camera.position.set(15, 12, -22)
+		const camera = new THREE.PerspectiveCamera( 95, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		camera.position.set(15, 22, -15)
 
 		const scene = new THREE.Scene();
 
@@ -64,19 +64,19 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		//Orbit Controls 
 
 		const controls = new OrbitControls( camera, renderer.domElement );
-		controls.minDistance = 20;
-		controls.maxDistance = 20;
+		controls.minDistance = 5;
+		controls.maxDistance = 5;
 
         // Crear una geometría y un material
 
-		const planeGeometry = new THREE.PlaneGeometry(20, 20);
+		const planeGeometry = new THREE.PlaneGeometry(100, 100);
 		const planeMaterial = new THREE.MeshBasicMaterial({side: true, visible: false});
 		
 		const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 		planeMesh.rotateX(-Math.PI / 2);
 
 
-		const grid = new THREE.GridHelper(40, 40);
+		const grid = new THREE.GridHelper(90, 70);
 		scene.add(grid, planeMesh);
 
 		const gridGeometry = grid.geometry;
@@ -94,8 +94,8 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 				const y = originalPositions[ i+ 1];
 				const z = originalPositions[i + 3];
 
-				// Aplica una deformación sinusoidal en la dirección y
-				positions[i + 1] = y + Math.sin(z * factor + time / 800) * 2;
+				// Aplica una deformación sinusoidal en la dirección z
+				positions[i + 1] = y + Math.sin(z * factor + time / 800) * 3;
 			}
 
 			// Actualiza los datos de la geometría
@@ -115,7 +115,6 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		materialOne.matcap = matcapTextureone;
 
 		const torus = new THREE.Mesh( geometryOne, materialOne );
-		scene.add( torus );
 
 		const geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.6, 32 );
 		const material = new THREE.MeshStandardMaterial({
@@ -126,8 +125,6 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		shininess: 30,
         });
 
-		const matcapTexture = new THREE.TextureLoader().load('https://png.pngtree.com/thumb_back/fh260/background/20201104/pngtree-hologram-color-mix-background-image_457908.jpg');
-		material.matcap = matcapTexture;
 
 		const mesh = new THREE.Mesh( geometry, materialOne );
 
@@ -151,7 +148,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const materialSeven = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusSeven= new THREE.Mesh( geometrySeven, materialOne);
 
-		scene.add( mesh,torusOne,torusThree,torusFive, torusSix, torusSeven );
+		scene.add( mesh, torus, torusOne,torusThree,torusFive, torusSix, torusSeven );
 
 	// animation
 
@@ -202,7 +199,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
     materialfive.specularIntensity = shineIntensity;
     materialSix.specularIntensity = shineIntensity;	
 
-	deformGrid(time);
+	//deformGrid(time);
 	}
 
     </script>
