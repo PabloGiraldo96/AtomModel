@@ -42,8 +42,8 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			4,5,6,    6,7,4
 		];
 
-		const camera = new THREE.PerspectiveCamera( 95, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		camera.position.set(15, 22, -15)
+		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		camera.position.set(17, 15, -19)
 
 		const scene = new THREE.Scene();
 
@@ -64,19 +64,19 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		//Orbit Controls 
 
 		const controls = new OrbitControls( camera, renderer.domElement );
-		controls.minDistance = 5;
-		controls.maxDistance = 5;
+		controls.minDistance = 10;
+		controls.maxDistance = 10;
 
         // Crear una geometría y un material
 
-		const planeGeometry = new THREE.PlaneGeometry(100, 100);
+		const planeGeometry = new THREE.PlaneGeometry(70, 70);
 		const planeMaterial = new THREE.MeshBasicMaterial({side: true, visible: false});
 		
 		const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 		planeMesh.rotateX(-Math.PI / 2);
 
 
-		const grid = new THREE.GridHelper(90, 70);
+		const grid = new THREE.GridHelper(100, 100);
 		scene.add(grid, planeMesh);
 
 		const gridGeometry = grid.geometry;
@@ -102,11 +102,14 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			gridGeometry.attributes.position.needsUpdate = true;
 		}
 
-		const geometrySphere = new THREE.SphereGeometry(0.0050, 32, 32);
-		const materialSphere = new THREE.MeshNormalMaterial();
+		const geometrySphere = new THREE.SphereGeometry(0.40, 32, 32);
+		const eyeMaterial = new THREE.MeshMatcapMaterial();
+		const matCapTextureTres = new THREE.TextureLoader().load("https://th.bing.com/th/id/R.6cc4058feb0f6e5300ff3919f28a04dd?rik=ECfgYWHESIzeKQ&riu=http%3a%2f%2fanaximandrake.blogspirit.com%2fmedia%2f02%2f01%2f505193520.jpg&ehk=rYBwk5aqMFtNFcNt0IznklU5r%2fXvcYpVdy9iI4GpOjU%3d&risl=&pid=ImgRaw&r=0");
 
-		const sphere = new THREE.Mesh(geometrySphere, materialSphere);
-		//scene.add(sphere);
+		eyeMaterial.matcap = matCapTextureTres;
+
+		const sphere = new THREE.Mesh(geometrySphere, eyeMaterial);
+		scene.add(sphere);
 
 		const geometryOne = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
 		const materialOne = new THREE.MeshMatcapMaterial({specular:0xFFFFFF,shininess: 30 });
@@ -117,13 +120,18 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const torus = new THREE.Mesh( geometryOne, materialOne );
 
 		const geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.6, 32 );
+
 		const material = new THREE.MeshStandardMaterial({
-		roughness: 0,
-		metalness: 0.2,
-		color: 0xFFFA20,
-		specular: 0xFFFFFF,
-		shininess: 30,
+ 		color: 0xffffff, // Color blanco
+        roughness: 0,    // Ajusta según sea necesario
+        metalness: 0.5,  // Ajusta según sea necesario
+        emissive: 0xffffff,  // Color de emisión blanco
+        emissiveIntensity: 5,  // Intensidad de emisión
+        envMapIntensity: 5,    // Intensidad del mapa de entorno
+        specularIntensity: 2   // Intensidad del especular
         });
+
+        materialOne.specularIntensity = 5;  // Ajusta según sea necesario
 
 
 		const mesh = new THREE.Mesh( geometry, materialOne );
@@ -148,7 +156,19 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const materialSeven = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusSeven= new THREE.Mesh( geometrySeven, materialOne);
 
-		scene.add( mesh, torus, torusOne,torusThree,torusFive, torusSix, torusSeven );
+		const geometryEight = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialEight = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
+		const torusEight= new THREE.Mesh( geometryEight, materialOne);
+
+		const geometryNine = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialNine = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
+		const torusNine= new THREE.Mesh( geometryNine, materialOne);
+
+		const geometryTen = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const materialTen = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
+		const torusTen= new THREE.Mesh( geometryTen, materialOne);
+
+		scene.add( mesh, torus, torusOne,torusThree,torusFive, torusSix, torusSeven, torusEight,torusNine, torusTen );
 
 	// animation
 
@@ -160,38 +180,46 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 
 	const radius = 3.4; // Radio de la órbita
 	const radiusTwo = 1.9; 
-	const radiusThree = 3.7;
+	const radiusThree = 3.2;
 	const radiusFour = 3.2;
 
 
-	const speed = 0.0040; 
-	const speedtwo = 0.0070; 
+	const speed = 0.00750; 
+	const speedtwo = 0.0090; 
 
 	const angle = time * speed;
 	const angleTwo = time * speedtwo;
-	const angleThree = time * speed;
-	const angleFour = time * speedtwo;
-
-
+	
+	sphere.position.x = -0.19;
+	sphere.position.y = 0.75;
 	torus.position.y = radiusTwo * Math.sin(angle);
 	torus.position.x = radius * Math.cos(angle);
 	torus.position.z = radius * Math.sin(angle);
 	torusOne.position.y = radius * Math.sin(angleTwo);
 	torusOne.position.x = radiusThree * Math.cos(angleTwo);
-	torusThree.position.y = radiusTwo * Math.sin(-angle);
+	torusThree.position.y = -radiusTwo * Math.sin(angle);
 	torusThree.position.x = radiusTwo * Math.cos(-angle);
 	torusThree.position.z = radiusTwo * Math.sin(-angle);
 	torusFive.position.y = radiusTwo * Math.sin(angle);
-	torusFive.position.x = radiusTwo * Math.cos(angle);
+	torusFive.position.x = radiusThree * Math.cos(angle);
 	torusSix.position.y = radiusThree * Math.sin(-angleTwo);
-	torusSix.position.x = radiusThree * Math.cos(-angleTwo);
+	torusSix.position.x = -radiusTwo * Math.cos(-angleTwo);
 	torusSix.position.z = radiusThree * Math.sin(-angleTwo);
-	torusSeven.position.x = radiusFour * Math.cos(angleThree);
-	torusSeven.position.y = radiusFour * Math.sin(angleThree);
-	torusSeven.position.z = radiusFour * Math.cos(angleThree);
+	torusSeven.position.x = radiusFour * Math.cos(angle);
+	torusSeven.position.y = radiusFour * Math.sin(angle);
+	torusSeven.position.z = radiusFour * Math.cos(angle);
+	torusEight.position.x = radius * Math.cos(angleTwo);
+	torusEight.position.y = radiusThree * Math.sin(angleTwo);
+	torusEight.position.z = radius * Math.cos(-angleTwo);
+	torusNine.position.x = radiusTwo * Math.cos(angle);
+	torusNine.position.y = radiusTwo * Math.sin(angle);
+	torusNine.position.z = radiusTwo * Math.cos(angle);
+	torusTen.position.y = -radius * Math.cos(-angleTwo);
+	torusTen.position.x = -radius * Math.cos(-angleTwo);
+
 	renderer.render( scene, camera );
 
-    const shineIntensity = 0.05 + Math.sin(time / 1000) * 1.5; // Ajusta según sea necesario
+    const shineIntensity = 0.05 + Math.sin(time / 1000) * 3; // Ajusta según sea necesario
     materialOne.specularIntensity = shineIntensity;
     material.specularIntensity = shineIntensity;
     materialone.specularIntensity = shineIntensity;
