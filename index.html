@@ -42,7 +42,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			4,5,6,    6,7,4
 		];
 
-		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		const camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		camera.position.set(17, 15, -19)
 
 		const scene = new THREE.Scene();
@@ -64,10 +64,14 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		//Orbit Controls 
 
 		const controls = new OrbitControls( camera, renderer.domElement );
-		controls.minDistance = 10;
-		controls.maxDistance = 10;
+		controls.minDistance = 25;
+		controls.maxDistance = 5;
 
         // Crear una geometría y un material
+
+		const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+		const lineGeometry = new THREE.BufferGeometry();
+
 
 		const planeGeometry = new THREE.PlaneGeometry(70, 70);
 		const planeMaterial = new THREE.MeshBasicMaterial({side: true, visible: false});
@@ -79,37 +83,29 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const grid = new THREE.GridHelper(100, 100);
 		scene.add(grid, planeMesh);
 
-		const gridGeometry = grid.geometry;
-		const originalPositions = gridGeometry.attributes.position.array.slice();
-
-		// DEFORMAR GRID
-
-		function deformGrid(time) {
-			const factor = 0.3; // Ajusta este factor según tu preferencia de deformación
-			const positions = gridGeometry.attributes.position.array;
-
-			// Modifica las posiciones de los vértices para deformar el GridHelper
-			for (let i = 0; i < positions.length; i += 3) {
-				const x = originalPositions[i];
-				const y = originalPositions[ i+ 1];
-				const z = originalPositions[i + 3];
-
-				// Aplica una deformación sinusoidal en la dirección z
-				positions[i + 1] = y + Math.sin(z * factor + time / 800) * 3;
-			}
-
-			// Actualiza los datos de la geometría
-			gridGeometry.attributes.position.needsUpdate = true;
-		}
-
-		const geometrySphere = new THREE.SphereGeometry(0.40, 32, 32);
-		const eyeMaterial = new THREE.MeshMatcapMaterial();
-		const matCapTextureTres = new THREE.TextureLoader().load("https://th.bing.com/th/id/R.6cc4058feb0f6e5300ff3919f28a04dd?rik=ECfgYWHESIzeKQ&riu=http%3a%2f%2fanaximandrake.blogspirit.com%2fmedia%2f02%2f01%2f505193520.jpg&ehk=rYBwk5aqMFtNFcNt0IznklU5r%2fXvcYpVdy9iI4GpOjU%3d&risl=&pid=ImgRaw&r=0");
-
-		eyeMaterial.matcap = matCapTextureTres;
-
-		const sphere = new THREE.Mesh(geometrySphere, eyeMaterial);
-		scene.add(sphere);
+//		const gridGeometry = grid.geometry;
+//		const originalPositions = gridGeometry.attributes.position.array.slice();
+//
+//		// DEFORMAR GRID
+//
+//		function deformGrid(time) {
+//			const factor = 0.3; // Ajusta este factor según tu preferencia de deformación
+//			const positions = gridGeometry.attributes.position.array;
+//
+//			// Modifica las posiciones de los vértices para deformar el GridHelper
+//			for (let i = 0; i < positions.length; i += 3) {
+//				const x = originalPositions[i];
+//				const y = originalPositions[ i+ 1];
+//				const z = originalPositions[i + 3];
+//
+//				// Aplica una deformación sinusoidal en la dirección z
+//				positions[i + 1] = y + Math.sin(z * factor + time / 800) * 3;
+//			}
+//
+//			// Actualiza los datos de la geometría
+//			gridGeometry.attributes.position.needsUpdate = true;
+//		}
+//
 
 		const geometryOne = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
 		const materialOne = new THREE.MeshMatcapMaterial({specular:0xFFFFFF,shininess: 30 });
@@ -122,17 +118,34 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.6, 32 );
 
 		const material = new THREE.MeshStandardMaterial({
- 		color: 0xffffff, // Color blanco
-        roughness: 0,    // Ajusta según sea necesario
-        metalness: 0.5,  // Ajusta según sea necesario
-        emissive: 0xffffff,  // Color de emisión blanco
-        emissiveIntensity: 5,  // Intensidad de emisión
-        envMapIntensity: 5,    // Intensidad del mapa de entorno
-        specularIntensity: 2   // Intensidad del especular
+ 		color: 0xffffff, 
+        roughness: 0,    
+        metalness: 0.5,  
+        emissive: 0xffffff,  
+        emissiveIntensity: 110,  
+        envMapIntensity: 110,    
+        specularIntensity: 115   
         });
 
-        materialOne.specularIntensity = 5;  // Ajusta según sea necesario
+        material.specularIntensity = 5;  // Ajusta según sea necesario
 
+
+		// PARTICULAS DENTRO DEL NUCLEO
+
+		const geometrySphere = new THREE.SphereGeometry(0.40, 32, 32);
+		const sphere = new THREE.Mesh(geometrySphere, materialOne);
+
+		const geometrySphereTwo = new THREE.SphereGeometry(0.35, 32, 32);
+		const sphereTwo = new THREE.Mesh(geometrySphereTwo, materialOne);
+
+		const geometrySphereThree = new THREE.SphereGeometry(0.35, 32, 32);
+		const sphereThree = new THREE.Mesh(geometrySphereThree, materialOne);
+
+		const geometrySphereFour = new THREE.SphereGeometry(0.35, 32, 32);
+		const sphereFour = new THREE.Mesh(geometrySphereFour, materialOne);
+		scene.add(sphere, sphereTwo, sphereThree, sphereFour);
+
+		// CREACION DE ELECTRONES QUE ORBITAN
 
 		const mesh = new THREE.Mesh( geometry, materialOne );
 
@@ -190,8 +203,17 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 	const angle = time * speed;
 	const angleTwo = time * speedtwo;
 	
+	
+	sphereFour.position.x = 0.019;
+	sphereFour.position.y = 0.39;
+	sphereFour.position.z = -0.35;
+	sphereThree.position.y = 0.79;
+	sphereThree.position.x = 0.19;
+	sphereTwo.position.x = -0.29;
+	sphereTwo.position.y = 0.29;
 	sphere.position.x = -0.19;
 	sphere.position.y = 0.75;
+	
 	torus.position.y = radiusTwo * Math.sin(angle);
 	torus.position.x = radius * Math.cos(angle);
 	torus.position.z = radius * Math.sin(angle);
@@ -214,12 +236,12 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 	torusNine.position.x = radiusTwo * Math.cos(angle);
 	torusNine.position.y = radiusTwo * Math.sin(angle);
 	torusNine.position.z = radiusTwo * Math.cos(angle);
-	torusTen.position.y = -radius * Math.cos(-angleTwo);
+	torusTen.position.y = -radius * Math.sin(-angleTwo);
 	torusTen.position.x = -radius * Math.cos(-angleTwo);
 
 	renderer.render( scene, camera );
 
-    const shineIntensity = 0.05 + Math.sin(time / 1000) * 3; // Ajusta según sea necesario
+    const shineIntensity = 2 + Math.sin(time / 100) * 2; // Ajusta según sea necesario
     materialOne.specularIntensity = shineIntensity;
     material.specularIntensity = shineIntensity;
     materialone.specularIntensity = shineIntensity;
