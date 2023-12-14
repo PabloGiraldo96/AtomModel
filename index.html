@@ -42,7 +42,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 			4,5,6,    6,7,4
 		];
 
-		const camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		camera.position.set(17, 15, -19)
 
 		const scene = new THREE.Scene();
@@ -64,14 +64,10 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		//Orbit Controls 
 
 		const controls = new OrbitControls( camera, renderer.domElement );
-		controls.minDistance = 25;
-		controls.maxDistance = 5;
+		controls.minDistance = 5;
+		controls.maxDistance = 15;
 
         // Crear una geometría y un material
-
-		const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
-		const lineGeometry = new THREE.BufferGeometry();
-
 
 		const planeGeometry = new THREE.PlaneGeometry(70, 70);
 		const planeMaterial = new THREE.MeshBasicMaterial({side: true, visible: false});
@@ -143,7 +139,12 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 
 		const geometrySphereFour = new THREE.SphereGeometry(0.35, 32, 32);
 		const sphereFour = new THREE.Mesh(geometrySphereFour, materialOne);
-		scene.add(sphere, sphereTwo, sphereThree, sphereFour);
+
+		const geometrySphereFive = new THREE.SphereGeometry(0.35, 32, 32);
+		const sphereFive = new THREE.Mesh(geometrySphereFour, materialOne);
+
+		const geometrySphereSix = new THREE.SphereGeometry(0.35, 32, 32);
+		const sphereSix = new THREE.Mesh(geometrySphereFour, materialOne);
 
 		// CREACION DE ELECTRONES QUE ORBITAN
 
@@ -181,7 +182,19 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const materialTen = new THREE.MeshDepthMaterial({specular:0xFFFFFF,shininess: 30 });
 		const torusTen= new THREE.Mesh( geometryTen, materialOne);
 
-		scene.add( mesh, torus, torusOne,torusThree,torusFive, torusSix, torusSeven, torusEight,torusNine, torusTen );
+		// Nuevas esferas que orbitan en sentido contrario
+
+		const geometrySphereOppositeOne = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const sphereOppositeOne = new THREE.Mesh(geometrySphereOppositeOne, materialOne);
+
+		const geometrySphereOppositeTwo = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const sphereOppositeTwo = new THREE.Mesh(geometrySphereOppositeTwo, materialOne);
+
+		const geometrySphereOppositeThree = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
+		const sphereOppositeThree = new THREE.Mesh(geometrySphereOppositeThree, materialOne);
+
+		scene.add(mesh, torus, torusOne, torusThree, torusFive, torusSix, torusSeven, torusEight, torusNine, torusTen, sphere, sphereTwo, sphereThree, sphereFour, sphereFive, sphereSix, sphereOppositeOne, sphereOppositeTwo, sphereOppositeThree);
+
 
 	// animation
 
@@ -192,6 +205,8 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 	function animation(time){
 
 	const radius = 3.4; // Radio de la órbita
+	const radiusN = 0.55;
+	const radiusM = 0.15;
 	const radiusTwo = 1.9; 
 	const radiusThree = 3.2;
 	const radiusFour = 3.2;
@@ -204,16 +219,39 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 	const angleTwo = time * speedtwo;
 	
 	
-	sphereFour.position.x = 0.019;
-	sphereFour.position.y = 0.39;
-	sphereFour.position.z = -0.35;
-	sphereThree.position.y = 0.79;
-	sphereThree.position.x = 0.19;
-	sphereTwo.position.x = -0.29;
-	sphereTwo.position.y = 0.29;
-	sphere.position.x = -0.19;
+	sphere.position.x = radiusM * Math.cos(angleTwo);
 	sphere.position.y = 0.75;
-	
+	sphere.position.z = -0.19;
+	sphereTwo.position.x = radiusN * Math.cos(angle);
+	sphereTwo.position.y = 0.29;
+	sphereThree.position.z = radiusN * Math.sin(angle);
+	sphereThree.position.x = 0.19;
+	sphereThree.position.y = 0.39;
+	sphereFour.position.x = 0;
+	sphereFour.position.y = 0.15;
+	sphereFour.position.z = radiusN * Math.cos(angleTwo);
+	sphereFive.position.x = radiusN * Math.cos(angle);
+	sphereFive.position.y = 0.55;
+	sphereFive.position.z = 0.0080;
+	sphereSix.position.z = 0.25
+	sphereSix.position.y = 0.5
+	sphereSix.position.x = radiusN * Math.cos(angle);
+
+
+    sphereOppositeOne.position.x = radius * Math.cos(angle);
+    sphereOppositeOne.position.y = 0.75;
+    sphereOppositeOne.position.z = -0.19;
+
+    sphereOppositeTwo.position.x = radius * Math.cos(angle);
+    sphereOppositeTwo.position.y = 0.29;
+    sphereOppositeTwo.position.z = radius * Math.sin(angle);
+
+    sphereOppositeThree.position.x = radius * Math.cos(-angle);
+    sphereOppositeThree.position.y = 0.55;
+    sphereOppositeThree.position.z = 0.0080;
+
+
+
 	torus.position.y = radiusTwo * Math.sin(angle);
 	torus.position.x = radius * Math.cos(angle);
 	torus.position.z = radius * Math.sin(angle);
