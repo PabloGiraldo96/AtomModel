@@ -19,7 +19,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body id="body">
-<div class="canvas container" >
+<div class="canvas container">
 
 <script type="module"> 
 
@@ -65,7 +65,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 
 		const controls = new OrbitControls( camera, renderer.domElement );
 		controls.minDistance = 5;
-		controls.maxDistance = 15;
+		controls.maxDistance = 12;
 
         // Crear una geometría y un material
 
@@ -79,30 +79,6 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const grid = new THREE.GridHelper(100, 100);
 		scene.add(grid, planeMesh);
 
-//		const gridGeometry = grid.geometry;
-//		const originalPositions = gridGeometry.attributes.position.array.slice();
-//
-//		// DEFORMAR GRID
-//
-//		function deformGrid(time) {
-//			const factor = 0.3; // Ajusta este factor según tu preferencia de deformación
-//			const positions = gridGeometry.attributes.position.array;
-//
-//			// Modifica las posiciones de los vértices para deformar el GridHelper
-//			for (let i = 0; i < positions.length; i += 3) {
-//				const x = originalPositions[i];
-//				const y = originalPositions[ i+ 1];
-//				const z = originalPositions[i + 3];
-//
-//				// Aplica una deformación sinusoidal en la dirección z
-//				positions[i + 1] = y + Math.sin(z * factor + time / 800) * 3;
-//			}
-//
-//			// Actualiza los datos de la geometría
-//			gridGeometry.attributes.position.needsUpdate = true;
-//		}
-//
-
 		const geometryOne = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
 		const materialOne = new THREE.MeshMatcapMaterial({specular:0xFFFFFF,shininess: 30 });
 
@@ -111,7 +87,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 
 		const torus = new THREE.Mesh( geometryOne, materialOne );
 
-		const geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.6, 32 );
+		const geometry = new THREE.SphereGeometry(0.75, 32, 32);
 
 		const material = new THREE.MeshStandardMaterial({
  		color: 0xffffff, 
@@ -128,7 +104,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 
 		// PARTICULAS DENTRO DEL NUCLEO
 
-		const geometrySphere = new THREE.SphereGeometry(0.40, 32, 32);
+		const geometrySphere = new THREE.SphereGeometry(0.35, 32, 32);
 		const sphere = new THREE.Mesh(geometrySphere, materialOne);
 
 		const geometrySphereTwo = new THREE.SphereGeometry(0.35, 32, 32);
@@ -193,9 +169,6 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 		const geometrySphereOppositeThree = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 0.2, 32 );
 		const sphereOppositeThree = new THREE.Mesh(geometrySphereOppositeThree, materialOne);
 
-		scene.add(mesh, torus, torusOne, torusThree, torusFive, torusSix, torusSeven, torusEight, torusNine, torusTen, sphere, sphereTwo, sphereThree, sphereFour, sphereFive, sphereSix, sphereOppositeOne, sphereOppositeTwo, sphereOppositeThree);
-
-
 	// animation
 
 	mesh.position.y = 0.5;
@@ -250,8 +223,6 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
     sphereOppositeThree.position.y = 0.55;
     sphereOppositeThree.position.z = 0.0080;
 
-
-
 	torus.position.y = radiusTwo * Math.sin(angle);
 	torus.position.x = radius * Math.cos(angle);
 	torus.position.z = radius * Math.sin(angle);
@@ -278,16 +249,7 @@ import {OrbitControls} from './orbitControls/OrbitControls.js'
 	torusTen.position.x = -radius * Math.cos(-angleTwo);
 
 	renderer.render( scene, camera );
-
-    const shineIntensity = 2 + Math.sin(time / 100) * 2; // Ajusta según sea necesario
-    materialOne.specularIntensity = shineIntensity;
-    material.specularIntensity = shineIntensity;
-    materialone.specularIntensity = shineIntensity;
-    materialfour.specularIntensity = shineIntensity;
-    materialfive.specularIntensity = shineIntensity;
-    materialSix.specularIntensity = shineIntensity;	
-
-	//deformGrid(time);
+	scene.add(mesh, torus, torusOne, torusThree, torusFive, torusSix, torusSeven, torusEight, torusNine, torusTen, sphere, sphereTwo, sphereThree, sphereFour, sphereFive, sphereSix, sphereOppositeOne, sphereOppositeTwo, sphereOppositeThree);
 	}
 
     </script>
